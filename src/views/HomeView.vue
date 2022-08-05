@@ -19,8 +19,7 @@
             <v-card-subtitle>2022/08/05 13:30</v-card-subtitle>
           </v-row>
           <v-card-text justify="justify">Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla,
-            zeta, et
-            lanista.Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et
+            zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et
             lanista.
           </v-card-text>
         </v-card>

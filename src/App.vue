@@ -61,6 +61,7 @@
             bottom
             right
             class="v-btn--fixed"
+            to="/create/thread"
         >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
