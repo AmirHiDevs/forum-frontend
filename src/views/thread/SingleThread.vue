@@ -17,9 +17,10 @@
             <v-card-subtitle>Amir</v-card-subtitle>
             <v-card-subtitle>2022/08/05 13:30</v-card-subtitle>
           </v-row>
-          <v-card-text justify="justify">Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla,
-            zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et lanista.Bulla, zeta, et
-            lanista.
+          <v-card-text justify="justify">
+            <vue-markdown>
+
+            </vue-markdown>
           </v-card-text>
         </v-card>
       </v-col>
@@ -30,9 +31,10 @@
 
 <script>
 import ThreadAnswers from "@/views/thread/ThreadAnswers";
+import VueMarkdown from "vue-markdown/src/VueMarkdown";
 
 export default {
   name: 'SingleThread',
-  components: {ThreadAnswers},
+  components: {ThreadAnswers,VueMarkdown},
 }
 </script>
