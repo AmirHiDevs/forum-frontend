@@ -71,7 +71,7 @@
 
 <script>
 
-import Axios from "./axios";
+// import Axios from "./axios";
 
 export default {
   name: 'App',
@@ -80,10 +80,10 @@ export default {
     //
   }),
 
-  mounted() {
-    Axios.get('threads').then(res =>{
-      console.log(res);
-    })
-  }
+  // mounted() {
+  //   Axios.get('threads').then(res =>{
+  //     console.log(res);
+  //   })
+  // }
 };
 </script>
