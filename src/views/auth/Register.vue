@@ -114,6 +114,8 @@
 
 <script>
 
+import {RegisterReq} from "@/requests/auth";
+
 export default {
   name: 'Register',
 
@@ -127,7 +129,7 @@ export default {
     valid: true,
 
 
-    Rules : {
+    Rules: {
       name: [
         v => !!v || 'Name is required',
         v => (v && v.length <= 10) || 'Name must be less than 10 characters',
@@ -153,9 +155,23 @@ export default {
     checkPassConf(value) {
       return value === this.password || "Passwords must match."
     },
+
     register() {
-      this.$refs.form.register()
+      const formData = {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+      }
+
+      RegisterReq(formData).then( res => {
+
+        alert('Registered successfully.')
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
     },
+
   },
 }
 </script>
