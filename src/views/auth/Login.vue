@@ -27,6 +27,13 @@
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
               </v-toolbar>
+              <v-progress-linear
+                  v-if="loading"
+                  absolute
+                  color="orange"
+                  height="6"
+                  indeterminate
+              ></v-progress-linear>
               <v-card-text>
                 <v-form
                     ref="form"
@@ -34,7 +41,6 @@
                     lazy-validation
                     flat
                 >
-
                   <v-text-field
                       v-model="email"
                       :rules="Rules.email"
@@ -79,6 +85,15 @@
                       Login
                     </v-btn>
                   </v-row>
+                  <v-alert
+                      border="left"
+                      color="red"
+                      dense
+                      text
+                      v-if="hasErrors"
+                      type="error"
+                  >Incorrect Credential(s).
+                  </v-alert>
                 </v-form>
               </v-card-text>
             </v-card>
@@ -91,7 +106,7 @@
 
 <script>
 
-import {LoginReq} from "@/requests/auth";
+import {loginReq} from "@/requests/auth";
 
 export default {
   name: 'Login',
@@ -102,7 +117,8 @@ export default {
     password: '',
     showPass: false,
     valid: true,
-
+    hasErrors: false,
+    loading: false,
 
     Rules: {
       email: [
@@ -119,17 +135,35 @@ export default {
 
   methods: {
     login() {
+
+      this.loading = true
+
+
       const formData = {
         email: this.email,
         password: this.password,
       }
 
-      LoginReq(formData);
+      loginReq(formData).then(res => {
+
+        if (res.status === 200) {
+          this.loading = false
+
+          localStorage.setItem('isAuth', 'true');
+          this.$router.push('/threads')
+
+        }
+      }).catch(err => {
+
+        if (err.response.status === 422) {
+          console.log( err.response.data.errors)
+          this.hasErrors = true
+          this.loading = false
+        }
+      });
     },
   },
+
 }
 </script>
 
-<style scoped>
-
-</style>

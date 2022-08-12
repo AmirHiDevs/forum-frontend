@@ -27,6 +27,13 @@
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
               </v-toolbar>
+              <v-progress-linear
+                  v-if="loading"
+                  absolute
+                  color="orange"
+                  height="6"
+                  indeterminate
+              ></v-progress-linear>
               <v-card-text>
                 <v-form
                     ref="form"
@@ -102,6 +109,14 @@
                     </v-btn>
 
                   </v-row>
+                  <v-alert
+                      border="left"
+                      dense
+                      text
+                      v-show="isRegistered || hasErrors"
+                      :type="hasErrors ? 'error' : 'success'"
+                      :color="isRegistered ? 'green' : 'red'"
+                  >{{isRegistered ? 'You have been successfully registered.' : 'Incorrect Credential(s).'}}</v-alert>
                 </v-form>
               </v-card-text>
             </v-card>
@@ -114,7 +129,7 @@
 
 <script>
 
-import {RegisterReq} from "@/requests/auth";
+import {registerReq} from "@/requests/auth";
 
 export default {
   name: 'Register',
@@ -127,7 +142,9 @@ export default {
     passwordConfirmation: '',
     showPass: false,
     valid: true,
-
+    loading: false,
+    isRegistered: false,
+    hasErrors: false,
 
     Rules: {
       name: [
@@ -162,13 +179,13 @@ export default {
         email: this.email,
         password: this.password,
       }
-
-      RegisterReq(formData).then( res => {
-
-        alert('Registered successfully.')
-        console.log(res)
+      this.loading = true
+      registerReq(formData).then(res => {
+        res.status === 201 ? this.isRegistered = true : this.isRegistered = false;
+        this.loading = false
       }).catch(err => {
-        console.log(err)
+        err.response.status !== 201 ? this.hasErrors = true : this.hasErrors = false;
+        this.loading = false
       })
     },
 
@@ -176,6 +193,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

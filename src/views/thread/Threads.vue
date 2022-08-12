@@ -27,10 +27,10 @@
               </router-link>
             </v-card>
             <v-card class="pa-2 mt-3" flat>
-              <span class="text-caption"><v-icon size="20">mdi-eye</v-icon>12,345</span>
+              <span class="text-caption"><v-icon size="20">mdi-bell</v-icon>{{ thread.subscribes_count }}</span>
             </v-card>
             <v-card class="pa-2 mt-3" flat>
-              <span class="text-caption"><v-icon size="20">mdi-message</v-icon>120</span>
+              <span class="text-caption"><v-icon size="20">mdi-message</v-icon>{{ thread.answers_count }}</span>
             </v-card>
             <v-card class="pa-2 mt-2" flat>
               <router-link :to="'/channels/'+thread.channel.slug" class="text-decoration-none">
@@ -52,7 +52,7 @@
           sm="8"
       >
         <v-pagination
-            v-show="!loading"
+            v-if="!loading"
             v-model="current_page"
             class="my-4"
             :length="last_page"
@@ -69,7 +69,7 @@ import {threadsListReq} from "@/requests/thread";
 
 
 export default {
-  name: 'Threads',
+  name: 'threads',
 
 
   data: () => ({
