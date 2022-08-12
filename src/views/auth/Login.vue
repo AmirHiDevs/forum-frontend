@@ -74,7 +74,7 @@
                     <v-btn
                         :disabled="!valid"
                         color="success"
-                        @click="Login"
+                        @click="login"
                     >
                       Login
                     </v-btn>
@@ -90,6 +90,8 @@
 </template>
 
 <script>
+
+import {LoginReq} from "@/requests/auth";
 
 export default {
   name: 'Login',
@@ -116,8 +118,13 @@ export default {
   }),
 
   methods: {
-    Login() {
-      this.$refs.form.Login()
+    login() {
+      const formData = {
+        email: this.email,
+        password: this.password,
+      }
+
+      LoginReq(formData);
     },
   },
 }
