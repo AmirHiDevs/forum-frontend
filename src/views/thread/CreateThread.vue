@@ -4,12 +4,19 @@
         justify="center"
         content="center"
     >
+      <v-progress-linear
+          v-if="loading"
+          absolute
+          color="orange"
+          height="6"
+          indeterminate
+      ></v-progress-linear>
       <v-col
           cols="12"
           md="8"
           sm="8"
       >
-        <v-card flat>
+        <v-card>
           <v-snackbar
               v-model="snackbar"
               absolute
@@ -24,7 +31,7 @@
           </v-snackbar>
           <v-form
               ref="form"
-              @submit.prevent="submit"
+              lazy-validation
           >
             <v-container fluid>
               <v-row>
@@ -32,8 +39,9 @@
                     cols="12"
                 >
                   <v-text-field
-                      v-model="form.title"
-                      :rules="rules.title"
+                      v-model="formData.title"
+                      name="title"
+                      :rules="[v => !!v || 'Title is required']"
                       color="purple darken-2"
                       label="Title"
                       required
@@ -41,8 +49,9 @@
                 </v-col>
                 <v-col cols="12">
                   <v-textarea
-                      v-model="form.content"
-                      :rules="rules.content"
+                      v-model="formData.contents"
+                      name="contents"
+                      :rules="[v => !!v || 'Content is required']"
                       color="teal"
                   >
                     <template v-slot:label>
@@ -57,9 +66,11 @@
                     sm="6"
                 >
                   <v-select
-                      v-model="form.channel"
+                      :rules="[v => !!v || 'Channel is required']"
+                      v-model="formData.channel_id"
                       :items="channels"
-                      :rules="rules.channel"
+                      item-text="name"
+                      item-value="id"
                       color="pink"
                       label="Channel"
                       required
@@ -69,21 +80,23 @@
             </v-container>
             <v-card-actions>
               <v-btn
-                  text
-                  @click="resetForm"
-              >
-                Cancel
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                  :disabled="!formIsValid"
+                  class="text-right"
                   text
                   color="primary"
-                  type="submit"
+                  @click="submit"
               >
                 Submit
               </v-btn>
             </v-card-actions>
+            <v-alert
+                border="left"
+                color="red"
+                dense
+                text
+                v-if="hasErrors"
+                type="error"
+            >Please Check entered data.
+            </v-alert>
           </v-form>
         </v-card>
       </v-col>
@@ -92,50 +105,55 @@
 </template>
 
 <script>
+import {channelsListReq} from "@/requests/channels";
+import {createThreadReq} from "@/requests/thread";
+
 export default {
   name: "CreateThread",
 
-  data () {
-    const threadForm = Object.freeze({
-      title: '',
-      Content: '',
-      Channel: '',
-    })
 
-    return {
-      form: Object.assign({}, threadForm),
-      rules: {
-        channel: [val => (val || '').length > 0 || 'This field is required'],
-        title: [val => (val || '').length > 0 || 'This field is required'],
-        content: [val => (val || '').length > 0 || 'This field is required'],
-      },
-      channels: ['Laravel', 'Vue.js'],
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.',
-      snackbar: false,
-      threadForm,
-    }
-  },
+  data: () => ({
+    channels: null,
+    snackbar: false,
+    hasErrors: false,
+    loading: false,
 
-  computed: {
-    formIsValid () {
-      return (
-          this.form.title &&
-          this.form.channel &&
-          this.form.content
-      )
+    formData: {
+      title: null,
+      contents: null,
+      channel_id: null,
     },
-  },
-
+  }),
   methods: {
-    resetForm () {
-      this.form = Object.assign({}, this.threadForm)
-      this.$refs.form.reset()
+    fetchChannelsList() {
+      channelsListReq().then(res => {
+        this.channels = res.data
+      })
     },
-    submit () {
-      this.snackbar = true
-      this.resetForm()
+
+
+    submit() {
+      this.loading = true
+
+      createThreadReq(this.formData).then(res => {
+        if (res.status === 200) {
+          this.snackbar = true
+          this.loading = false
+          this.$router.push('/threads')
+        }
+      }).catch(err => {
+        if (err.response.status === 422) {
+          console.log(err.response.data.errors)
+          this.hasErrors = true
+          this.loading = false
+        }
+      });
     },
   },
+
+  mounted() {
+    this.fetchChannelsList();
+  }
 
 }
 </script>

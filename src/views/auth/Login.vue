@@ -37,7 +37,6 @@
               <v-card-text>
                 <v-form
                     ref="form"
-                    v-model="valid"
                     lazy-validation
                     flat
                 >
@@ -78,7 +77,6 @@
                       </v-btn>
                     </router-link>
                     <v-btn
-                        :disabled="!valid"
                         color="success"
                         @click="login"
                     >
@@ -116,7 +114,7 @@ export default {
     email: '',
     password: '',
     showPass: false,
-    valid: true,
+
     hasErrors: false,
     loading: false,
 
