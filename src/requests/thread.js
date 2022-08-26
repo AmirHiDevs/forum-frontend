@@ -9,3 +9,6 @@ export let createThreadReq = (formData) => {
     return Axios.post(   'threads',formData)
 };
 
+export let fetchSingleThreadReq = (slug) => {
+    return Axios.get(   `threads/${slug}`)
+};

@@ -21,7 +21,7 @@ const routes = [
         component: CreateThread
     },
     {
-        path: '/singleThread/:slug',
+        path: '/threads/:slug',
         name: 'singleThread',
         component: SingleThread
     },

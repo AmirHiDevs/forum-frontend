@@ -73,7 +73,7 @@ export default {
 
 
   data: () => ({
-    threads: [],
+    threads: {},
     loading: true,
     current_page: 1,
     last_page: 1,
